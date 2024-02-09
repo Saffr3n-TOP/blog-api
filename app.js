@@ -1,6 +1,7 @@
 // @ts-check
 
 const express = require('express');
+const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const createError = require('http-errors');
@@ -9,6 +10,11 @@ const indexRouter = require('./routes/index');
 const postsRouter = require('./routes/posts');
 
 const app = express();
+
+mongoose.set('strictQuery', false);
+mongoose
+  .connect(process.env.DB_URI, { dbName: process.env.DB_NAME })
+  .catch((err) => console.error(err));
 
 app.use(logger('dev'));
 app.use(express.json());
