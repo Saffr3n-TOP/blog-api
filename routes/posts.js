@@ -1,5 +1,3 @@
-// @ts-check
-
 const express = require('express');
 const postsController = require('../controllers/posts');
 const commentsController = require('../controllers/comments');

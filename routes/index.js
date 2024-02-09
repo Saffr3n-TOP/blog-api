@@ -1,5 +1,3 @@
-// @ts-check
-
 const express = require('express');
 const controller = require('../controllers/index');
 
