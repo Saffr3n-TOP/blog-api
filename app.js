@@ -6,6 +6,7 @@ const logger = require('morgan');
 const createError = require('http-errors');
 
 const indexRouter = require('./routes/index');
+const postsRouter = require('./routes/posts');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', indexRouter);
+app.use('/posts', postsRouter);
 
 app.use((req, res, next) => {
   const err = createError(404, 'Page Not Found');
