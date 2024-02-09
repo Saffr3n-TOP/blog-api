@@ -44,7 +44,7 @@ app.use(
     const error = { status, message };
     isDevEnv && (error.stack = err.stack);
 
-    res.status(status).json(error);
+    res.status(status).json({ error });
   }
 );
 
