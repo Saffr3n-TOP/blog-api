@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 const User = require('../models/user');
@@ -9,12 +10,7 @@ const User = require('../models/user');
  * @param {import("express").NextFunction} next
  */
 exports.index = function (req, res, next) {
-  res.status(200).json({
-    data: {
-      status: res.statusCode,
-      message: 'NOT IMPLEMENTED: Index route'
-    }
-  });
+  res.redirect('/posts');
 };
 
 /**
@@ -23,12 +19,35 @@ exports.index = function (req, res, next) {
  * @param {import("express").NextFunction} next
  */
 exports.login = function (req, res, next) {
-  res.status(200).json({
-    data: {
-      status: res.statusCode,
-      message: 'NOT IMPLEMENTED: Login POST route'
+  passport.authenticate(
+    'local',
+    /**
+     * @param {import('http-errors').HttpError} err
+     * @param {Express.User} user
+     * @param {{ message: string }} info
+     */
+    (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        return next(createError(400, info.message));
+      }
+
+      req.login(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.status(200).json({
+          data: {
+            message: 'Successfully logged in'
+          }
+        });
+      });
     }
-  });
+  )(req, res, next);
 };
 
 exports.register = [
@@ -94,7 +113,7 @@ exports.register = [
 
       res.status(200).json({
         data: {
-          message: `User ${user.username} successfully created`
+          message: 'Successfully registered'
         }
       });
     });
@@ -107,10 +126,15 @@ exports.register = [
  * @param {import("express").NextFunction} next
  */
 exports.logout = function (req, res, next) {
-  res.status(200).json({
-    data: {
-      status: res.statusCode,
-      message: 'NOT IMPLEMENTED: Logout route'
+  req.logout((err) => {
+    if (err) {
+      return next(err);
     }
+
+    res.status(200).json({
+      data: {
+        message: 'Successfully logged out'
+      }
+    });
   });
 };
