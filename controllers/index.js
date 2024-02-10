@@ -17,21 +17,7 @@ exports.index = function (req, res, next) {
  * @param {import("express").Response} res
  * @param {import("express").NextFunction} next
  */
-exports.loginGet = function (req, res, next) {
-  res.status(200).json({
-    data: {
-      status: res.statusCode,
-      message: 'NOT IMPLEMENTED: Login GET route'
-    }
-  });
-};
-
-/**
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- * @param {import("express").NextFunction} next
- */
-exports.loginPost = function (req, res, next) {
+exports.login = function (req, res, next) {
   res.status(200).json({
     data: {
       status: res.statusCode,
@@ -45,21 +31,7 @@ exports.loginPost = function (req, res, next) {
  * @param {import("express").Response} res
  * @param {import("express").NextFunction} next
  */
-exports.registerGet = function (req, res, next) {
-  res.status(200).json({
-    data: {
-      status: res.statusCode,
-      message: 'NOT IMPLEMENTED: Register GET route'
-    }
-  });
-};
-
-/**
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- * @param {import("express").NextFunction} next
- */
-exports.registerPost = function (req, res, next) {
+exports.register = function (req, res, next) {
   res.status(200).json({
     data: {
       status: res.statusCode,
