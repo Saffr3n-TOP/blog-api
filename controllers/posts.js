@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const createError = require('http-errors');
 const Post = require('../models/post');
+const Comment = require('../models/comment');
 
 /**
  * @param {import("express").Request} req
@@ -197,22 +198,31 @@ exports.postDelete = async function (req, res, next) {
     return next(createError(401, 'Unauthorized'));
   }
 
-  const deletedPost = await Post.findByIdAndDelete(req.params.postId)
-    .exec()
-    .catch((err) => createError(500, err));
+  const [post, comments] = await Promise.all([
+    Post.findById(req.params.postId).exec(),
+    Comment.find({ post: req.params.postId }).exec()
+  ]).catch((err) => [createError(500, err)]);
 
-  if (deletedPost instanceof Error) {
-    return next(deletedPost);
+  if (post instanceof Error) {
+    return next(post);
   }
 
-  if (!deletedPost) {
+  if (!post) {
     return next(createError(404, 'Post Not Found'));
+  }
+
+  const deleteResults = await Promise.all([
+    post.deleteOne().exec(),
+    ...comments.map((comment) => comment.deleteOne().exec())
+  ]).catch((err) => createError(500, err));
+
+  if (deleteResults instanceof Error) {
+    return next(deleteResults);
   }
 
   res.status(200).json({
     data: {
-      message: 'Post successfully deleted',
-      post: deletedPost
+      message: 'Post successfully deleted'
     }
   });
 };
